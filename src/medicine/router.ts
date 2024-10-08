@@ -82,7 +82,12 @@ router.get("/medicine/:id", async (req: Request, res: Response) => {
 
 router.get("/all", async (req: Request, res: Response) => {
     try {
+        const page = parseInt(req.query.page as string) || 1; 
+        const limit = parseInt(req.query.limit as string) || 20; 
+        const skip = (page - 1) * limit;
         const medicine = await prisma.specificMedicine.findMany({
+            skip: skip, 
+            take: limit, 
             select: {
                 CIS_code: true,
                 name: true,
@@ -111,6 +116,8 @@ router.get("/all", async (req: Request, res: Response) => {
 
         res.status(200).json({
             result: medicine,
+            page: page,
+            limit: limit,
           });
     } catch (error) {
         console.error('Erreur lors de l\'exécution de la requête', error);
