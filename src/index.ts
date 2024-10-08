@@ -1,15 +1,14 @@
 import express, { Request, Response, Router } from "express";
 import dotenv from "dotenv";
 import specificMedicineRouter from './medicine/router'
+import { loadData } from "./medicine/initialize";
 
 dotenv.config();
 const app = express();
-const router: Router = express.Router();
 
 const PORT = process.env.PORT;
 app.use(express.json()); 
 app.use('/specificMedicine', specificMedicineRouter);
-app.use(router);
 
 
 app.listen(PORT, () => { 
@@ -17,6 +16,8 @@ app.listen(PORT, () => {
 }).on("error", (error) => {
   throw new Error(error.message);
 });
+
+loadData();
 
 
 app.get("/", (request: Request, response: Response) => { 

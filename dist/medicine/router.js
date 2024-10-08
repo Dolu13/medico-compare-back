@@ -14,21 +14,71 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
-const path_1 = __importDefault(require("path"));
-const fs_extra_1 = __importDefault(require("fs-extra"));
 const prisma = new client_1.PrismaClient();
 const router = express_1.default.Router();
-const currentDirectory = path_1.default.resolve();
-router.get("/autorisations/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/autocomplete/:text", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const text = req.params.text;
     try {
-        const users = yield prisma.autorisationType.findMany({
+        const medicines = yield prisma.specificMedicine.findMany({
+            where: {
+                name: {
+                    contains: text,
+                },
+            },
             select: {
-                Autorisation_Id: true,
-                Name: true,
+                CIS_code: true,
+                name: true,
             },
         });
         res.status(200).json({
-            result: users,
+            result: medicines,
+        });
+    }
+    catch (error) {
+        console.error('Erreur lors de l\'exécution de la requête', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
+    }
+    finally {
+        yield prisma.$disconnect();
+    }
+}));
+router.get("/medicine/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = Number(req.params.id);
+    if (isNaN(id)) {
+        res.status(400).json({ error: "Invalid CIS_code, must be a number." });
+    }
+    try {
+        const medicine = yield prisma.specificMedicine.findUnique({
+            where: {
+                CIS_code: id,
+            },
+            select: {
+                CIS_code: true,
+                name: true,
+                administration: true,
+                commercialized: true,
+                AMM_date: true,
+                company: true,
+                reinforced_surveillance: true,
+                autorisation: {
+                    select: {
+                        name: true,
+                    }
+                },
+                avisSmr: {
+                    select: {
+                        avis_smr: true,
+                    }
+                },
+                avisAsmr: {
+                    select: {
+                        avis_asmr: true,
+                    }
+                },
+            },
+        });
+        res.status(200).json({
+            result: medicine,
         });
     }
     catch (error) {
@@ -41,15 +91,34 @@ router.get("/autorisations/all", (req, res) => __awaiter(void 0, void 0, void 0,
 }));
 router.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield prisma.specificMedicine.findMany({
+        const medicine = yield prisma.specificMedicine.findMany({
             select: {
-                CISCode: true,
-                Name: true,
-                Autorisation: true,
+                CIS_code: true,
+                name: true,
+                administration: true,
+                commercialized: true,
+                AMM_date: true,
+                company: true,
+                reinforced_surveillance: true,
+                autorisation: {
+                    select: {
+                        name: true,
+                    }
+                },
+                avisSmr: {
+                    select: {
+                        avis_smr: true,
+                    }
+                },
+                avisAsmr: {
+                    select: {
+                        avis_asmr: true,
+                    }
+                },
             },
         });
         res.status(200).json({
-            result: users,
+            result: medicine,
         });
     }
     catch (error) {
@@ -60,74 +129,4 @@ router.get("/all", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield prisma.$disconnect();
     }
 }));
-function loadAutorisationTypeData() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const autorisationTypes = yield prisma.autorisationType.findMany({
-            where: {
-                Autorisation_Id: { in: [1, 2, 3] }
-            }
-        });
-        if (autorisationTypes.length > 2) {
-            return;
-        }
-        const autorisationTypePath = path_1.default.join(currentDirectory, 'src', 'medicine', 'autorisationTypes.json');
-        const data = yield fs_extra_1.default.readFile(autorisationTypePath, 'utf8');
-        const newAutorisationType = JSON.parse(data);
-        for (const autorisation of newAutorisationType) {
-            yield prisma.autorisationType.create({
-                data: {
-                    Autorisation_Id: autorisation.Id,
-                    Name: autorisation.Name,
-                }
-            });
-        }
-    });
-}
-function loadSpecificMedicineData() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const specificMedicine = yield prisma.specificMedicine.findFirst();
-        if (specificMedicine) {
-            return;
-        }
-        const specificMedicinePath = path_1.default.join(currentDirectory, 'src', 'medicine', 'specificMedicine.json');
-        const data = yield fs_extra_1.default.readFile(specificMedicinePath, 'utf8');
-        const newSpecificMedicine = JSON.parse(data);
-        for (const medicine of newSpecificMedicine) {
-            try {
-                yield prisma.specificMedicine.create({
-                    data: {
-                        CISCode: medicine["CIS Code"],
-                        Name: medicine.Name,
-                        Form: medicine.Form,
-                        Administration: medicine.Administration,
-                        AutorisationId: medicine.Autorisation,
-                        Commercialized: medicine.Commercialized,
-                        AMMDate: medicine["AMM Date"],
-                        EUNumber: medicine["EU Number"],
-                        Company: medicine.Company,
-                        ReinforcedSurveillance: medicine["Reinforced surveillance"],
-                    }
-                });
-            }
-            catch (error) {
-                console.error('Erreur lors de l\'insertion du médicament:', medicine, error);
-            }
-        }
-    });
-}
-function loadData() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield loadAutorisationTypeData();
-            yield loadSpecificMedicineData();
-        }
-        catch (error) {
-            console.error('Erreur lors du chargement des données', error);
-        }
-        finally {
-            yield prisma.$disconnect();
-        }
-    });
-}
-loadData();
 exports.default = router;

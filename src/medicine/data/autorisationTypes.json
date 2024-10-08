@@ -1,0 +1,22 @@
+[
+  {
+    "Id": 1,
+    "Name": "Autorisation active"
+  },
+  {
+    "Id": 2,
+    "Name": "Autorisation archivée"
+  },
+  {
+    "Id": 3,
+    "Name": "Autorisation abrogée"
+  },
+  {
+    "Id": 4,
+    "Name": "Autorisation retirée"
+  },
+  {
+    "Id": 5,
+    "Name": "Autorisation suspendue"
+  }
+]

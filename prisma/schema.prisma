@@ -15,22 +15,41 @@ datasource db {
 
 
 model AutorisationType {
-  Autorisation_Id              Int              @id
-  Name            String
+  autorisation_Id              Int              @id
+  name            String
   SpecificMedicines SpecificMedicine[]
 }
 
+
+model AvisAsmr {
+  Id                   Int          @id @default(autoincrement())
+  CIS_code              Int          @unique   
+  avis_asmr            String
+  specificMedicine    SpecificMedicine? @relation("SpecificMedicineAvisAsmr", fields: [CIS_code], references: [CIS_code])
+}
+
+model AvisSmr {
+  Id                   Int          @id @default(autoincrement())
+  CIS_code              Int          @unique   
+  avis_smr            String
+  specificMedicine    SpecificMedicine? @relation("SpecificMedicineAvis", fields: [CIS_code], references: [CIS_code])
+}
+
+
 model SpecificMedicine {
   Id                   Int          @id @default(autoincrement())
-  CISCode              Int          @map("CIS Code")
-  Name                 String
-  Form                 String
-  Administration       String
-  AutorisationId       Int              
-  Autorisation         AutorisationType  @relation(fields: [AutorisationId], references: [Autorisation_Id])
-  Commercialized       Boolean
-  AMMDate             String           @map("AMM Date")
-  EUNumber            String           @map("EU Number")
-  Company              String
-  ReinforcedSurveillance Boolean         @map("Reinforced surveillance")
+  CIS_code                    Int               @map("CIS Code") @unique
+  name                 String
+  form                 String
+  administration       String
+  autorisationId       Int              
+  autorisation         AutorisationType  @relation(fields: [autorisationId], references: [autorisation_Id])
+  commercialized       Boolean
+  AMM_date             String           @map("AMM_date")
+  EU_number            String           @map("EU_number")
+  company              String
+  reinforced_surveillance Boolean         @map("reinforced_surveillance")
+  avisSmr                  AvisSmr?        @relation("SpecificMedicineAvis")
+  avisAsmr                  AvisAsmr?        @relation("SpecificMedicineAvisAsmr")
 }
+
