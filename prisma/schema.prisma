@@ -14,4 +14,23 @@ datasource db {
 }
 
 
-// Nos entités juste ici ...
+model AutorisationType {
+  Autorisation_Id              Int              @id
+  Name            String
+  SpecificMedicines SpecificMedicine[]
+}
+
+model SpecificMedicine {
+  Id                   Int          @id @default(autoincrement())
+  CISCode              Int          @map("CIS Code")
+  Name                 String
+  Form                 String
+  Administration       String
+  AutorisationId       Int              
+  Autorisation         AutorisationType  @relation(fields: [AutorisationId], references: [Autorisation_Id])
+  Commercialized       Boolean
+  AMMDate             String           @map("AMM Date")
+  EUNumber            String           @map("EU Number")
+  Company              String
+  ReinforcedSurveillance Boolean         @map("Reinforced surveillance")
+}
