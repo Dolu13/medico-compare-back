@@ -68,6 +68,7 @@ const swaggerOptions = {
     "src/medicine/router.ts",
     "./**/router.ts",
     "./router.ts",
+    `${__dirname}/src/medicine/router.ts`,
   ],
 };
 
