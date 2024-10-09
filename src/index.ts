@@ -20,6 +20,9 @@ const swaggerOptions = {
       {
         url: "http://localhost:3000/",
       },
+      {
+        url: "https://medico-compare-back.vercel.app/",
+      },
     ],
     components: {
       schemas: {
