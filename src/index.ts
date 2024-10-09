@@ -68,10 +68,13 @@ const swaggerOptions = {
 
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
+const options = {
+  customCss: '.swagger-ui .topbar { display: none }'
+}
 
 const PORT = process.env.PORT;
 app.use(express.json()); 
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs, options));
 app.use('/specificMedicine', specificMedicineRouter);
 
 
