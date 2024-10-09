@@ -60,6 +60,8 @@
 
 Notre projet est un site web qui permet de rechercher un médicament pour informer l'utilisateur concernant ses caractéristiques. Il fournit le moyen d'administration, le groupe pharmaceutique, et les avis SMR et ASMR de la HAS (Haute Autorité de Santé) du médicament.
 
+Tester l'API [ici](https://medico-compare-back.vercel.app/).
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 

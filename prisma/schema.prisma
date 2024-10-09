@@ -20,6 +20,12 @@ model AutorisationType {
   SpecificMedicines SpecificMedicine[]
 }
 
+model GenericMedicine {
+  Id                   Int          @id @default(autoincrement())
+  CIS_code              Int          @unique   
+  name            String
+  specificMedicine    SpecificMedicine? @relation("SpecificMedicineGeneric", fields: [CIS_code], references: [CIS_code])
+}
 
 model AvisAsmr {
   Id                   Int          @id @default(autoincrement())
@@ -51,5 +57,7 @@ model SpecificMedicine {
   reinforced_surveillance Boolean         @map("reinforced_surveillance")
   avisSmr                  AvisSmr?        @relation("SpecificMedicineAvis")
   avisAsmr                  AvisAsmr?        @relation("SpecificMedicineAvisAsmr")
+  genericMedicine                  GenericMedicine?        @relation("SpecificMedicineGeneric")
+
 }
 

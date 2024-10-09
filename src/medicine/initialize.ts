@@ -17,7 +17,7 @@ async function loadAutorisationTypeData() {
         return;
     }
 
-    const autorisationTypePath = path.join(currentDirectory, 'src', 'medicine', 'autorisationTypes.json');
+    const autorisationTypePath = path.join(currentDirectory, 'src', 'medicine','data', 'autorisationTypes.json');
     const data = await fs.readFile(autorisationTypePath, 'utf8');
     const newAutorisationType:{
       "Id": number,
@@ -36,6 +36,43 @@ async function loadAutorisationTypeData() {
     console.log('fin de l\'ajout d\'autorisation');
 }
 
+async function loadGenericMedicineData() {
+    const generic = await prisma.genericMedicine.findFirst();
+    if (generic) {
+        console.log('pas de générique ajouté');
+        return;
+    }
+
+    const genericPath = path.join(currentDirectory, 'src', 'medicine', 'data', 'genericMedicine.json');
+    const data = await fs.readFile(genericPath, 'utf8');
+    const sanitizedData = data.replace(/^\uFEFF/, ''); 
+
+    const newGenerics:{
+      "CIS_code": number,
+      "name": string,
+    }[] = JSON.parse(sanitizedData);
+  
+    for (const generic of newGenerics) {
+        const specificMedicineExists = await prisma.specificMedicine.findUnique({
+            where: { CIS_code: generic.CIS_code },
+        });
+
+        const genericExists = await prisma.genericMedicine.findUnique({
+            where: { CIS_code: generic.CIS_code },
+        });
+
+        if (specificMedicineExists && !genericExists) {
+            await prisma.genericMedicine.create({
+                data: {
+                    CIS_code: generic.CIS_code,
+                    name: generic.name,
+                }
+            });
+        }
+    }
+    console.log('fin de l\'ajout de generique');
+
+}
 
 async function loadAvisSMRData() {
     const avisSmr = await prisma.avisSmr.findFirst();
@@ -44,7 +81,7 @@ async function loadAvisSMRData() {
         return;
     }
 
-    const avisSmrPath = path.join(currentDirectory, 'src', 'medicine', 'avis_smr.json');
+    const avisSmrPath = path.join(currentDirectory, 'src', 'medicine', 'data', 'avis_smr.json');
     const data = await fs.readFile(avisSmrPath, 'utf8');
     const sanitizedData = data.replace(/^\uFEFF/, ''); 
 
@@ -81,7 +118,7 @@ async function loadAvisASMRData() {
         console.log('pas d\'avis ASMR ajouté');
         return;
     }
-    const avisAsmrPath = path.join(currentDirectory, 'src', 'medicine', 'avis_asmr.json');
+    const avisAsmrPath = path.join(currentDirectory, 'src', 'medicine','data', 'avis_asmr.json');
     const data = await fs.readFile(avisAsmrPath, 'utf8');
     const sanitizedData = data.replace(/^\uFEFF/, ''); 
 
@@ -117,7 +154,7 @@ async function loadSpecificMedicineData() {
         console.log('pas de médicaments ajouté ajouté');
         return;
     }
-    const specificMedicinePath = path.join(currentDirectory, 'src', 'medicine', 'specificMedicine.json');
+    const specificMedicinePath = path.join(currentDirectory, 'src', 'medicine','data', 'specificMedicine.json');
     const data = await fs.readFile(specificMedicinePath, 'utf8');
     const newSpecificMedicine:{
       "CIS_code": number,
@@ -166,11 +203,13 @@ async function loadSpecificMedicineData() {
 
          await loadAvisASMRData();
 
+         await loadGenericMedicineData();
          // vider les tables
          //await prisma.avisSmr.deleteMany();
          //await prisma.avisAsmr.deleteMany();
          //await prisma.specificMedicine.deleteMany();
          //await prisma.autorisationType.deleteMany();
+         //await prisma.genericMedicine.deleteMany();
          //console.log('fin de la deletion');
 
     } catch (error) {
