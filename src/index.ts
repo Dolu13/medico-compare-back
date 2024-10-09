@@ -65,7 +65,9 @@ const swaggerOptions = {
     }
   },
   apis: [
-    "./src/medicine/router.ts",
+    "src/medicine/router.ts",
+    "./**/router.ts",
+    "./router.ts",
   ],
 };
 
