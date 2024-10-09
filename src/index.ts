@@ -68,13 +68,12 @@ const swaggerOptions = {
 
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-const options = {
-  customCss: '.swagger-ui .topbar { display: none }'
-}
+
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 const PORT = process.env.PORT;
 app.use(express.json()); 
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs, options));
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
 app.use('/specificMedicine', specificMedicineRouter);
 
 
