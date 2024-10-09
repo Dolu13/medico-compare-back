@@ -9,8 +9,9 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  credentials: true,
-  origin: ['http://localhost:3000', 'http://localhost:80'] // Whitelist the domains you want to allow
+  origin: ['http://localhost:3000', 'https://medico-compare-back.vercel.app', '*'], // * pas recommandé mais bon
+  methods: ['GET'],
+  allowedHeaders: ['Content-Type'], 
 };
 
 const swaggerOptions = {
