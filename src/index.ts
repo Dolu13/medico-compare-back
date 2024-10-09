@@ -4,9 +4,14 @@ import specificMedicineRouter from './medicine/router'
 import { loadData } from "./medicine/initialize";
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
+import cors from 'cors';
 dotenv.config();
 const app = express();
+
+const corsOptions = {
+  credentials: true,
+  origin: ['http://localhost:3000', 'http://localhost:80'] // Whitelist the domains you want to allow
+};
 
 const swaggerOptions = {
   definition: {
@@ -76,6 +81,7 @@ const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger
 
 const PORT = process.env.PORT;
 app.use(express.json()); 
+app.use(cors(corsOptions));
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
 app.use('/specificMedicine', specificMedicineRouter);
 
