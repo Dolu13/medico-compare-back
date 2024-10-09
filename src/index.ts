@@ -44,7 +44,18 @@ const swaggerOptions = {
             avisAsmr: {
               type: "object", 
               properties: { avis_asmr: { type: "string", description: "ASMR opinion" } } 
+            },
+            genericMedicine: {
+              type: "object", 
+              properties: { name: { type: "string", description: "generic medecine associate" } } 
             }
+          }
+        },
+        SpecificMedicineAutocomplete: {
+          type: "object",
+          properties: {
+            CIS_code: { type: "integer", description: "The CIS code of the medicine" },
+            name: { type: "string", description: "Name of the medicine" },
           }
         }
       }

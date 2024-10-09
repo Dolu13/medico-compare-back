@@ -3,60 +3,13 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const router: Router = express.Router();
-
-/**
- * components:
- *   schemas:
- *     SpecificMedicine:
- *       type: object
- *       properties:
- *         CIS_code:
- *           type: integer
- *           description: "The CIS code of the medicine"
- *         name:
- *           type: string
- *           description: "Name of the medicine"
- *         administration:
- *           type: string
- *           description: "Method of administration of the medicine"
- *         commercialized:
- *           type: boolean
- *           description: "Is the medicine commercialized?"
- *         AMM_date:
- *           type: string
- *           description: "Authorization date of the medicine"
- *         company:
- *           type: string
- *           description: "Company producing the medicine"
- *         reinforced_surveillance:
- *           type: boolean
- *           description: "Is the medicine under reinforced surveillance?"
- *         autorisation:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *               description: "Authorization type"
- *         avisSmr:
- *           type: object
- *           properties:
- *             avis_smr:
- *               type: string
- *               description: "SMR (Medical Service Rendered) opinion"
- *         avisAsmr:
- *           type: object
- *           properties:
- *             avis_asmr:
- *               type: string
- *               description: "ASMR (Improvement of Medical Service Rendered) opinion"
- */
          
 /**
  * @swagger
  * /specificMedicine/autocomplete/{text}:
  *   get:
  *     summary: Retrieve a list of specific medicine that match by name with text
- *     tags: [SpecificMedicine]
+ *     tags: [SpecificMedicineAutocomplete]
  *     parameters:
  *       - in: path
  *         name: text
@@ -70,7 +23,7 @@ const router: Router = express.Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/SpecificMedicine'
+ *               $ref: '#/components/schemas/SpecificMedicineAutocomplete'
  */
 router.get("/autocomplete/:text", async (req: Request, res: Response) => {
     const text = req.params.text;
