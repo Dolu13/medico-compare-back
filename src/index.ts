@@ -11,7 +11,7 @@ const app = express();
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://medico-compare-back.vercel.app', 'https://medico-front-five.vercel.app/', '*'], // * pas recommandé mais bon
   methods: ['GET', 'OPTION'],
-  allowedHeaders: ['Content-Type', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'], 
+  allowedHeaders: ['Content-Type', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Credentials', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'], 
 };
 
 const swaggerOptions = {
