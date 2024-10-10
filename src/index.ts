@@ -42,6 +42,7 @@ const swaggerOptions = {
             AMM_date: { type: "string", description: "Authorization date of the medicine" },
             company: { type: "string", description: "Company producing the medicine" },
             reinforced_surveillance: { type: "boolean", description: "Is the medicine under reinforced surveillance?" },
+            form: { type: "string", description: "Form of the medicine" },
             autorisation: { 
               type: "object", 
               properties: { name: { type: "string", description: "Authorization type" } } 

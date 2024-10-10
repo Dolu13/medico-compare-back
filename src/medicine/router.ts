@@ -90,6 +90,7 @@ router.get("/medicine/:id", async (req: Request, res: Response) => {
                 administration: true,
                 commercialized: true,
                 AMM_date: true,
+                form: true,
                 company: true,
                 reinforced_surveillance: true,
                 autorisation: {
@@ -156,6 +157,7 @@ router.get("/all", async (req: Request, res: Response) => {
                 administration: true,
                 commercialized: true,
                 AMM_date: true,
+                form: true,
                 company: true,
                 reinforced_surveillance: true,
                 autorisation: {
